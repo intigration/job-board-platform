@@ -5,45 +5,56 @@ import { Building2, MapPin, Briefcase, DollarSign, Clock, Search } from "lucide-
 import Link from "next/link"
 import { jobsData } from "@/data/jobs"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
-import { useEffect, useState, useTransition } from "react"
+import { useEffect, useState } from "react"
 
 export default function JobsContent() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const [isPending, startTransition] = useTransition()
   
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "")
-  const [locationFilter, setLocationFilter] = useState(searchParams.get("location") || "")
-  const [jobType, setJobType] = useState(searchParams.get("type") || "")
+  // Initialize state with empty values first
+  const [searchQuery, setSearchQuery] = useState("")
+  const [locationFilter, setLocationFilter] = useState("")
+  const [jobType, setJobType] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Update state from URL params after component mounts
+  useEffect(() => {
+    setSearchQuery(searchParams?.get("q") || "")
+    setLocationFilter(searchParams?.get("location") || "")
+    setJobType(searchParams?.get("type") || "")
+    setIsLoading(false)
+  }, [searchParams])
 
   // Update URL with search params
-  const createQueryString = (params: Record<string, string | null>) => {
-    const newSearchParams = new URLSearchParams(searchParams.toString())
+  const updateSearchParams = (params: Record<string, string>) => {
+    const newSearchParams = new URLSearchParams(searchParams?.toString() || "")
     
     Object.entries(params).forEach(([key, value]) => {
-      if (value === null || value === "") {
+      if (!value) {
         newSearchParams.delete(key)
       } else {
         newSearchParams.set(key, value)
       }
     })
     
-    return newSearchParams.toString()
+    router.push(`${pathname}?${newSearchParams.toString()}`)
   }
 
-  // Handle search and filter changes
+  // Debounced search update
   useEffect(() => {
-    startTransition(() => {
-      const queryString = createQueryString({
+    if (isLoading) return
+
+    const timer = setTimeout(() => {
+      updateSearchParams({
         q: searchQuery,
         location: locationFilter,
         type: jobType,
       })
-      
-      router.push(`${pathname}?${queryString}`)
-    })
-  }, [searchQuery, locationFilter, jobType])
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery, locationFilter, jobType, isLoading])
 
   // Filter jobs based on search criteria
   const filteredJobs = Object.values(jobsData).filter(job => {
@@ -63,8 +74,8 @@ export default function JobsContent() {
     router.push(pathname)
   }
 
-  if (isPending) {
-    return <div className="p-8 text-center">Updating results...</div>
+  if (isLoading) {
+    return <div className="p-8 text-center">Loading...</div>
   }
 
   return (
