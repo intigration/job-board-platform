@@ -16,7 +16,7 @@ interface Company {
     title: string;
     applicants: number;
     posted: string;
-    status: string;
+    status: "active" | "closed";
   }>;
 }
 
