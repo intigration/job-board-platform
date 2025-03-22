@@ -7,7 +7,7 @@ import { companies } from "@/data/companies"
 import { notFound } from "next/navigation"
 
 export default function CompanyPage({ params }: { params: { id: string } }) {
-  const company = companies.find((c) => c.id === parseInt(params.id))
+  const company = companies.find((c) => String(c.id) === params.id)
   const [activeTab, setActiveTab] = useState("overview")
 
   if (!company) {
