@@ -4,14 +4,46 @@ import { Button } from "@/components/ui/button"
 import { Building2, MapPin, Briefcase, DollarSign, Clock, Search } from "lucide-react"
 import Link from "next/link"
 import { jobsData } from "@/data/jobs"
-import { useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { useEffect, useState, useTransition } from "react"
 
 export default function JobsContent() {
+  const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
+  
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "")
   const [locationFilter, setLocationFilter] = useState(searchParams.get("location") || "")
-  const [jobType, setJobType] = useState("")
+  const [jobType, setJobType] = useState(searchParams.get("type") || "")
+
+  // Update URL with search params
+  const createQueryString = (params: Record<string, string | null>) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === null || value === "") {
+        newSearchParams.delete(key)
+      } else {
+        newSearchParams.set(key, value)
+      }
+    })
+    
+    return newSearchParams.toString()
+  }
+
+  // Handle search and filter changes
+  useEffect(() => {
+    startTransition(() => {
+      const queryString = createQueryString({
+        q: searchQuery,
+        location: locationFilter,
+        type: jobType,
+      })
+      
+      router.push(`${pathname}?${queryString}`)
+    })
+  }, [searchQuery, locationFilter, jobType])
 
   // Filter jobs based on search criteria
   const filteredJobs = Object.values(jobsData).filter(job => {
@@ -28,6 +60,11 @@ export default function JobsContent() {
     setSearchQuery("")
     setLocationFilter("")
     setJobType("")
+    router.push(pathname)
+  }
+
+  if (isPending) {
+    return <div className="p-8 text-center">Updating results...</div>
   }
 
   return (
