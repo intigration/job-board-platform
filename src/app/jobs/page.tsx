@@ -1,6 +1,5 @@
 import { Suspense } from "react"
 import JobsContent from "./components/JobsContent"
-import SearchParamsWrapper from "./components/SearchParamsWrapper"
 import { Loader2 } from "lucide-react"
 
 export const dynamic = 'force-dynamic'
@@ -17,9 +16,7 @@ export default function JobsPage() {
           </div>
         }
       >
-        <SearchParamsWrapper>
-          {(params) => <JobsContent initialParams={params} />}
-        </SearchParamsWrapper>
+        <JobsContent />
       </Suspense>
     </main>
   )
