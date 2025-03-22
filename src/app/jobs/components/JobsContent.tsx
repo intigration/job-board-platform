@@ -1,16 +1,3 @@
-import { Suspense } from "react"
-import JobsContent from "./components/JobsContent"
-
-// Server Component
-export default function JobsPage() {
-  return (
-    <Suspense fallback={<div className="p-8 text-center">Loading jobs...</div>}>
-      <JobsContent />
-    </Suspense>
-  )
-}
-
-// Client Component
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -20,7 +7,7 @@ import { jobsData } from "@/data/jobs"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 
-function JobsContent() {
+export default function JobsContent() {
   const searchParams = useSearchParams()
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "")
   const [locationFilter, setLocationFilter] = useState(searchParams.get("location") || "")
