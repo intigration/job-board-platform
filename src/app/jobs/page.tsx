@@ -5,9 +5,10 @@ import { Building2, MapPin, Briefcase, DollarSign, Clock, Search } from "lucide-
 import Link from "next/link"
 import { jobsData } from "@/data/jobs"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 
-export default function JobsPage() {
+// Separate client component for the jobs content
+function JobsContent() {
   const searchParams = useSearchParams()
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "")
   const [locationFilter, setLocationFilter] = useState(searchParams.get("location") || "")
@@ -17,18 +18,13 @@ export default function JobsPage() {
   const filteredJobs = Object.values(jobsData).filter(job => {
     const matchesSearch = !searchQuery || 
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.description.toLowerCase().includes(searchQuery.toLowerCase())
-
-    const matchesLocation = !locationFilter ||
+      job.company.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesLocation = !locationFilter || 
       job.location.toLowerCase().includes(locationFilter.toLowerCase())
-
-    const matchesType = !jobType || job.type.toLowerCase() === jobType.toLowerCase()
-
+    const matchesType = !jobType || job.type === jobType
     return matchesSearch && matchesLocation && matchesType
   })
 
-  // Clear all filters
   const clearFilters = () => {
     setSearchQuery("")
     setLocationFilter("")
@@ -37,114 +33,100 @@ export default function JobsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid gap-8 lg:grid-cols-4">
-        {/* Filters */}
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Filters</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Location</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder="e.g., Remote"
-                    value={locationFilter}
-                    onChange={(e) => setLocationFilter(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-lg border bg-background"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">Job Type</label>
-                <div className="relative">
-                  <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <select
-                    value={jobType}
-                    onChange={(e) => setJobType(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-lg border bg-background appearance-none"
-                  >
-                    <option value="">All Types</option>
-                    <option value="Full-time">Full-time</option>
-                    <option value="Part-time">Part-time</option>
-                    <option value="Contract">Contract</option>
-                    <option value="Internship">Internship</option>
-                  </select>
-                </div>
-              </div>
-              <Button variant="outline" className="w-full" onClick={clearFilters}>
-                Clear Filters
-              </Button>
-            </div>
+      {/* Search and filter section */}
+      <div className="mb-8 space-y-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search jobs or companies..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-md border pl-9 py-2 text-sm"
+            />
           </div>
-        </div>
-
-        {/* Job Listings */}
-        <div className="lg:col-span-3 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search jobs..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border bg-background"
-              />
-            </div>
+          <div className="relative flex-1">
+            <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Location..."
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+              className="w-full rounded-md border pl-9 py-2 text-sm"
+            />
           </div>
-
-          <div className="space-y-4">
-            {filteredJobs.map((job) => (
-              <div key={job.id} className="rounded-lg border bg-card p-6">
-                <div className="flex items-start gap-4">
-                  <div className="rounded-lg bg-primary/10 p-3">
-                    <Building2 className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <h3 className="font-semibold">{job.title}</h3>
-                    <p className="text-sm text-muted-foreground">{job.company}</p>
-                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-4 w-4" />
-                        <span>{job.location}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Briefcase className="h-4 w-4" />
-                        <span>{job.type}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <DollarSign className="h-4 w-4" />
-                        <span>{job.salary}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        <span>{job.postedDate}</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mt-2">
-                      {job.description}
-                    </p>
-                  </div>
-                  <Button variant="secondary" asChild>
-                    <Link href={`/jobs/${job.id}`}>
-                      View Details
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            ))}
-
-            {filteredJobs.length === 0 && (
-              <div className="text-center py-12 rounded-lg border bg-card">
-                <p className="text-muted-foreground mb-4">No jobs found matching your criteria.</p>
-                <Button onClick={clearFilters}>Clear Filters</Button>
-              </div>
-            )}
-          </div>
+          <select
+            value={jobType}
+            onChange={(e) => setJobType(e.target.value)}
+            className="rounded-md border px-3 py-2 text-sm"
+          >
+            <option value="">All Types</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+            <option value="Internship">Internship</option>
+          </select>
+          <Button onClick={clearFilters} variant="outline">
+            Clear Filters
+          </Button>
         </div>
       </div>
+
+      {/* Results count */}
+      <p className="text-sm text-muted-foreground mb-6">
+        Showing {filteredJobs.length} jobs
+      </p>
+
+      {/* Jobs list */}
+      <div className="space-y-4">
+        {filteredJobs.map((job) => (
+          <Link
+            key={job.id}
+            href={`/jobs/${job.id}`}
+            className="group block rounded-lg border bg-card p-6 hover:shadow-md transition-shadow"
+          >
+            <div className="flex flex-col sm:flex-row items-start gap-6">
+              <div className="rounded-lg bg-primary/10 p-4">
+                <Building2 className="h-8 w-8 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                  {job.title}
+                </h3>
+                <p className="text-muted-foreground mt-1">{job.company}</p>
+                <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4" />
+                    <span>{job.location}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Briefcase className="h-4 w-4" />
+                    <span>{job.type}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <DollarSign className="h-4 w-4" />
+                    <span>{job.salary}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{job.posted}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
+  )
+}
+
+// Main page component with Suspense boundary
+export default function JobsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading jobs...</div>}>
+      <JobsContent />
+    </Suspense>
   )
 } 
