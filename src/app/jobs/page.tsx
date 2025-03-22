@@ -1,9 +1,8 @@
 import { Suspense } from "react"
-import JobsContent from "./components/JobsContent"
 import { Loader2 } from "lucide-react"
+import ClientWrapper from "./components/ClientWrapper"
 
 export const dynamic = 'force-dynamic'
-export const fetchCache = 'force-no-store'
 
 export default function JobsPage() {
   return (
@@ -16,7 +15,7 @@ export default function JobsPage() {
           </div>
         }
       >
-        <JobsContent />
+        <ClientWrapper />
       </Suspense>
     </main>
   )

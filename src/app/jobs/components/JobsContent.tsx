@@ -4,57 +4,66 @@ import { Button } from "@/components/ui/button"
 import { Building2, MapPin, Briefcase, DollarSign, Clock, Search } from "lucide-react"
 import Link from "next/link"
 import { jobsData } from "@/data/jobs"
-import { useSearchParams, useRouter, usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useRouter, usePathname } from "next/navigation"
+import { useState } from "react"
 
-export default function JobsContent() {
+interface JobsContentProps {
+  initialParams: {
+    q: string
+    location: string
+    type: string
+  }
+}
+
+export default function JobsContent({ initialParams }: JobsContentProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   
-  // Initialize state with empty values first
-  const [searchQuery, setSearchQuery] = useState("")
-  const [locationFilter, setLocationFilter] = useState("")
-  const [jobType, setJobType] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
-
-  // Update state from URL params after component mounts
-  useEffect(() => {
-    setSearchQuery(searchParams?.get("q") || "")
-    setLocationFilter(searchParams?.get("location") || "")
-    setJobType(searchParams?.get("type") || "")
-    setIsLoading(false)
-  }, [searchParams])
+  const [searchQuery, setSearchQuery] = useState(initialParams.q)
+  const [locationFilter, setLocationFilter] = useState(initialParams.location)
+  const [jobType, setJobType] = useState(initialParams.type)
 
   // Update URL with search params
   const updateSearchParams = (params: Record<string, string>) => {
-    const newSearchParams = new URLSearchParams(searchParams?.toString() || "")
+    const newSearchParams = new URLSearchParams()
     
     Object.entries(params).forEach(([key, value]) => {
-      if (!value) {
-        newSearchParams.delete(key)
-      } else {
+      if (value) {
         newSearchParams.set(key, value)
       }
     })
     
-    router.push(`${pathname}?${newSearchParams.toString()}`)
+    const queryString = newSearchParams.toString()
+    router.push(queryString ? `${pathname}?${queryString}` : pathname)
   }
 
-  // Debounced search update
-  useEffect(() => {
-    if (isLoading) return
+  // Handle search and filter changes
+  const handleSearch = (newQuery: string) => {
+    setSearchQuery(newQuery)
+    updateSearchParams({
+      q: newQuery,
+      location: locationFilter,
+      type: jobType,
+    })
+  }
 
-    const timer = setTimeout(() => {
-      updateSearchParams({
-        q: searchQuery,
-        location: locationFilter,
-        type: jobType,
-      })
-    }, 300)
+  const handleLocationChange = (newLocation: string) => {
+    setLocationFilter(newLocation)
+    updateSearchParams({
+      q: searchQuery,
+      location: newLocation,
+      type: jobType,
+    })
+  }
 
-    return () => clearTimeout(timer)
-  }, [searchQuery, locationFilter, jobType, isLoading])
+  const handleTypeChange = (newType: string) => {
+    setJobType(newType)
+    updateSearchParams({
+      q: searchQuery,
+      location: locationFilter,
+      type: newType,
+    })
+  }
 
   // Filter jobs based on search criteria
   const filteredJobs = Object.values(jobsData).filter(job => {
@@ -74,10 +83,6 @@ export default function JobsContent() {
     router.push(pathname)
   }
 
-  if (isLoading) {
-    return <div className="p-8 text-center">Loading...</div>
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid gap-8 lg:grid-cols-4">
@@ -94,7 +99,7 @@ export default function JobsContent() {
                     type="text"
                     placeholder="e.g., Remote"
                     value={locationFilter}
-                    onChange={(e) => setLocationFilter(e.target.value)}
+                    onChange={(e) => handleLocationChange(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 rounded-lg border bg-background"
                   />
                 </div>
@@ -105,7 +110,7 @@ export default function JobsContent() {
                   <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <select
                     value={jobType}
-                    onChange={(e) => setJobType(e.target.value)}
+                    onChange={(e) => handleTypeChange(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 rounded-lg border bg-background appearance-none"
                   >
                     <option value="">All Types</option>
@@ -132,7 +137,7 @@ export default function JobsContent() {
                 type="text"
                 placeholder="Search jobs..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 rounded-lg border bg-background"
               />
             </div>
