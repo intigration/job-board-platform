@@ -1,3 +1,13 @@
+// Server Component
+export default function JobsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading jobs...</div>}>
+      <JobsContent />
+    </Suspense>
+  )
+}
+
+// Client Component
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -5,9 +15,8 @@ import { Building2, MapPin, Briefcase, DollarSign, Clock, Search } from "lucide-
 import Link from "next/link"
 import { jobsData } from "@/data/jobs"
 import { useSearchParams } from "next/navigation"
-import { Suspense, useEffect, useState } from "react"
+import { useState } from "react"
 
-// Separate client component for the jobs content
 function JobsContent() {
   const searchParams = useSearchParams()
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "")
@@ -119,14 +128,5 @@ function JobsContent() {
         ))}
       </div>
     </div>
-  )
-}
-
-// Main page component with Suspense boundary
-export default function JobsPage() {
-  return (
-    <Suspense fallback={<div className="p-8 text-center">Loading jobs...</div>}>
-      <JobsContent />
-    </Suspense>
   )
 } 
