@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Search, Briefcase, Building2, MapPin, Code, Palette, BarChart, Globe } from "lucide-react"
+import { Search, Briefcase, Building2, MapPin, Code,SatelliteDish,PackageSearch, Palette, Fan, BriefcaseIcon,BarChart, Globe, ShieldQuestion,SlidersHorizontal,ShieldCheck,FileText,Route,Building2Icon, PipetteIcon } from "lucide-react"
 import { jobsData } from "@/data/jobs"
 import { useRouter } from "next/navigation"
 
@@ -17,12 +17,12 @@ export default function Home() {
       keywords: "software engineer developer programming",
     },
     {
-      name: "Design",
+      name: "Designers",
       icon: Palette,
       keywords: "ui ux product graphic designer",
     },
     {
-      name: "Business",
+      name: "Commissioning",
       icon: BarChart,
       keywords: "manager analyst consultant marketing",
     },
@@ -31,6 +31,60 @@ export default function Home() {
       icon: Globe,
       keywords: "remote work from home",
     },
+     {
+      name: "CyberSecurity",
+      icon: ShieldQuestion,
+      keywords: "remote work from home",
+    },{
+    name: "Instrumentation & Control",
+    icon: SlidersHorizontal, // lucide-react
+    keywords: "instrument engineer control systems DCS PLC SCADA",
+  },
+  {
+    name: "Telecom & Network Systems",
+    icon: SatelliteDish, // lucide-react
+    keywords: "telecom engineer communication fiber optic network radio",
+  },
+  {
+    name: "Material & Corrosion Engineering",
+    icon: PackageSearch, // lucide-react
+    keywords: "material engineer corrosion metallurgy coatings welding",
+  },
+  {
+    name: "Piping Stress & Layout",
+    icon: PipetteIcon, // lucide-react
+    keywords: "piping stress layout CAESAR II isometric piping engineer",
+  },
+  {
+    name: "Pipeline Engineering",
+    icon: Route, // lucide-react
+    keywords: "pipeline engineer onshore offshore flowlines pigging",
+  },
+  {
+    name: "Civil & Structural",
+    icon: Building2Icon, // lucide-react
+    keywords: "civil engineer structural foundations concrete steel",
+  },
+  {
+    name: "HVAC & Mechanical",
+    icon: Fan, // lucide-react
+    keywords: "hvac engineer mechanical ventilation air conditioning",
+  },
+  {
+    name: "QA/QC & Inspection",
+    icon: ShieldCheck, // lucide-react
+    keywords: "qa qc quality assurance control inspection welding ndt",
+  },
+  {
+    name: "Document Control & Admin",
+    icon: FileText, // lucide-react
+    keywords: "document controller records management EDMS admin",
+  },
+  {
+    name: "Project Management",
+    icon: BriefcaseIcon, // lucide-react
+    keywords: "project manager planning scheduling cost control PMC",
+  }
   ]
 
   const handleCategoryClick = (keywords: string) => {

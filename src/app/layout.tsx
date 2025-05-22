@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "Jobify - Find Your Dream Job",
-  description: "Find your dream job or hire the best talent with Jobify",
+  title: "OGMC",
+  description: "Your Reliable Energy Partner",
 };
 
 export default function RootLayout({

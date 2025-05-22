@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useSession, signOut } from "next-auth/react"
 import { Menu, X, Briefcase } from "lucide-react"
+import Image from "next/image"
 
 export function Navbar() {
   const pathname = usePathname()
@@ -20,13 +21,19 @@ export function Navbar() {
       <div className="container flex h-14 items-center">
         <div className="mr-4 md:mr-8">
           <Link href="/" className="flex items-center gap-2 font-heading text-xl font-bold">
-            <Briefcase className="h-6 w-6 text-primary" />
-            <span>Jobify</span>
+            {/* <Briefcase className="h-6 w-6 text-primary" /> */}
+            <Image
+              src="/ogmcpng.png"
+              width={200}
+              height={200}
+              alt="Picture of the author"
+            />
+            <span>a Reliable Energy Partner</span>
           </Link>
         </div>
-        
+
         {/* Mobile Menu Button */}
-        <button 
+        <button
           className="ml-auto md:hidden p-2"
           onClick={toggleMenu}
           aria-label="Toggle menu"
@@ -38,43 +45,39 @@ export function Navbar() {
         <div className="hidden md:flex items-center space-x-6 text-sm">
           <Link
             href="/jobs"
-            className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${
-              pathname === "/jobs" 
-                ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary" 
+            className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${pathname === "/jobs"
+                ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                 : "text-foreground/60 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-            }`}
+              }`}
           >
             Jobs
           </Link>
           <Link
             href="/companies"
-            className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${
-              pathname === "/companies" 
-                ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary" 
+            className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${pathname === "/companies"
+                ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                 : "text-foreground/60 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-            }`}
+              }`}
           >
             Companies
           </Link>
           {session && (
             <Link
               href="/applications"
-              className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${
-                pathname === "/applications" 
-                  ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary" 
+              className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${pathname === "/applications"
+                  ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                   : "text-foreground/60 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-              }`}
+                }`}
             >
               My Applications
             </Link>
           )}
           <Link
             href="/post-a-job"
-            className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${
-              pathname === "/post-a-job" 
-                ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary" 
+            className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${pathname === "/post-a-job"
+                ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                 : "text-foreground/60 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-            }`}
+              }`}
           >
             Post a Job
           </Link>
@@ -116,22 +119,20 @@ export function Navbar() {
             <nav className="flex flex-col space-y-4">
               <Link
                 href="/jobs"
-                className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${
-                  pathname === "/jobs" 
-                    ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary" 
+                className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${pathname === "/jobs"
+                    ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                     : "text-foreground/60 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-                }`}
+                  }`}
                 onClick={toggleMenu}
               >
                 Jobs
               </Link>
               <Link
                 href="/companies"
-                className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${
-                  pathname === "/companies" 
-                    ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary" 
+                className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${pathname === "/companies"
+                    ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                     : "text-foreground/60 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-                }`}
+                  }`}
                 onClick={toggleMenu}
               >
                 Companies
@@ -139,11 +140,10 @@ export function Navbar() {
               {session && (
                 <Link
                   href="/applications"
-                  className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${
-                    pathname === "/applications" 
-                      ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary" 
+                  className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${pathname === "/applications"
+                      ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                       : "text-foreground/60 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-                  }`}
+                    }`}
                   onClick={toggleMenu}
                 >
                   My Applications
@@ -151,11 +151,10 @@ export function Navbar() {
               )}
               <Link
                 href="/post-a-job"
-                className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${
-                  pathname === "/post-a-job" 
-                    ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary" 
+                className={`relative px-3 py-1.5 rounded-md transition-all duration-200 hover:text-primary hover:bg-primary/5 ${pathname === "/post-a-job"
+                    ? "text-primary bg-primary/5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                     : "text-foreground/60 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-                }`}
+                  }`}
                 onClick={toggleMenu}
               >
                 Post a Job

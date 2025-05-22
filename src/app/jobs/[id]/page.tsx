@@ -48,7 +48,7 @@ export default function JobDetails({ params }: { params: { id: string } }) {
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
-                    <span>Posted {jobData.postedDate}</span>
+                    <span>Posted {jobData.posted}</span>
                   </div>
                 </div>
               </div>
